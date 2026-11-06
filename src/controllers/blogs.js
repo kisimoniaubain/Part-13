@@ -1,4 +1,5 @@
 const express = require('express');
+const { Op } = require('sequelize');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const HttpError = require('../util/httpError');
@@ -6,9 +7,13 @@ const { authenticateToken } = require('../util/auth');
 
 const router = express.Router();
 
-router.get('/', async (_request, response, next) => {
+router.get('/', async (request, response, next) => {
   try {
+    const where = request.query.search
+      ? { title: { [Op.iLike]: `%${request.query.search}%` } }
+      : undefined;
     const blogs = await Blog.findAll({
+      where,
       include: [{ model: User, as: 'user' }],
     });
     response.json(blogs);
