@@ -26,6 +26,8 @@ set `TEST_DATABASE_URL` in `.env`, then run `npm run start:test` in one
 terminal and `npm test` in another.
 
 The database schema is created and updated by migrations in `src/migrations/`.
+The `reading_lists` join table associates users with blogs; new entries are
+unread by default. Reading-list API features are not implemented yet.
 
 The API is available at `http://localhost:3001/api/blogs`:
 
@@ -54,6 +56,7 @@ Run `node src/cli.js` to print the blogs in the console.
 - `src/controllers/login.js` issues authentication tokens
 - `src/controllers/users.js` defines the user API routes
 - `src/models/blog.js` defines the blog model and ownership field
+- `src/models/readingList.js` defines the user/blog reading-list join model
 - `src/models/user.js` defines the user model and timestamps
 - `src/models/associations.js` links users and blogs
 - `src/util/db.js` configures the database connection
