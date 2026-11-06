@@ -142,6 +142,8 @@ describe('Users and authors API', () => {
 
     const user = await request(`/users/${users[0].id}`);
     assert.equal(user.response.status, 200);
+    const readingListId = user.body.readings[0].readingList.id;
+    assert.ok(Number.isSafeInteger(readingListId));
     assert.deepEqual(user.body.readings, [{
       id: blog.id,
       url: blog.url,
@@ -149,6 +151,10 @@ describe('Users and authors API', () => {
       author: blog.author,
       likes: blog.likes,
       year: blog.year,
+      readingList: {
+        id: readingListId,
+        read: false,
+      },
     }]);
   });
 

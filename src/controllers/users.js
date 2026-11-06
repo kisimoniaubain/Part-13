@@ -74,13 +74,21 @@ router.get('/:id', async (request, response, next) => {
         model: Blog,
         as: 'readings',
         attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
-        through: { attributes: [] },
+        through: { attributes: ['id', 'read'] },
       }],
     });
     if (!user) {
       return next(new HttpError(404, 'User not found'));
     }
-    response.json(user);
+    const userResponse = user.toJSON();
+    userResponse.readings = userResponse.readings.map(({ ReadingList, ...blog }) => ({
+      ...blog,
+      readingList: {
+        id: ReadingList.id,
+        read: ReadingList.read,
+      },
+    }));
+    response.json(userResponse);
   } catch (error) {
     next(error);
   }
