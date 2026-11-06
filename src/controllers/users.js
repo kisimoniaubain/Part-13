@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const HttpError = require('../util/httpError');
 
@@ -18,10 +19,21 @@ router.post('/', async (request, response, next) => {
     return next(new HttpError(400, 'Request body must be a JSON object'));
   }
 
-  const { name, username } = request.body;
+  const { name, username, password } = request.body;
+  if (typeof password !== 'string' || password.length === 0) {
+    return next(new HttpError(400, 'Password must not be empty'));
+  }
+
   try {
-    const user = await User.create({ name, username });
-    response.status(201).json(user);
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, username, passwordHash });
+    response.status(201).json({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   } catch (error) {
     next(error);
   }

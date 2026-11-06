@@ -1,6 +1,7 @@
 const express = require('express');
 const Blog = require('../models/blog');
 const HttpError = require('../util/httpError');
+const { authenticateToken } = require('../util/auth');
 
 const router = express.Router();
 
@@ -13,13 +14,20 @@ router.get('/', async (_request, response, next) => {
   }
 });
 
-router.post('/', async (request, response, next) => {
+router.post('/', authenticateToken, async (request, response, next) => {
   if (!request.body || typeof request.body !== 'object' || Array.isArray(request.body)) {
     return next(new HttpError(400, 'Request body must be a JSON object'));
   }
 
   try {
-    const blog = await Blog.create(request.body);
+    const { author, url, title, likes } = request.body;
+    const blog = await Blog.create({
+      author,
+      url,
+      title,
+      likes,
+      userId: request.userId,
+    });
     response.status(201).json(blog);
   } catch (error) {
     next(error);
@@ -52,17 +60,22 @@ router.put('/:id', async (request, response, next) => {
   }
 });
 
-router.delete('/:id', async (request, response, next) => {
+router.delete('/:id', authenticateToken, async (request, response, next) => {
   const id = Number(request.params.id);
   if (!Number.isSafeInteger(id) || id < 1) {
     return next(new HttpError(400, 'Blog id must be a positive integer'));
   }
 
   try {
-    const deletedCount = await Blog.destroy({ where: { id } });
-    if (deletedCount === 0) {
+    const blog = await Blog.findByPk(id);
+    if (!blog) {
       return next(new HttpError(404, 'Blog not found'));
     }
+    if (blog.userId !== request.userId) {
+      return next(new HttpError(403, 'Only the blog owner can delete this blog'));
+    }
+
+    await blog.destroy();
     response.status(204).end();
   } catch (error) {
     next(error);

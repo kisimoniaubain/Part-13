@@ -44,9 +44,16 @@ User = sequelize.define(
         },
       },
     },
+    passwordHash: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: 'users',
+    defaultScope: {
+      attributes: { exclude: ['passwordHash'] },
+    },
   },
 );
 
