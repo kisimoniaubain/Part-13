@@ -23,6 +23,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 
 - `GET /api/blogs` lists blogs
 - `POST /api/blogs` creates a blog
+- `PUT /api/blogs/:id` updates a blog's likes (JSON body: `{"likes": 3}`)
 - `DELETE /api/blogs/:id` deletes a blog by id
 
 Run `node src/cli.js` to print the blogs in the console.
