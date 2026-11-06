@@ -25,4 +25,13 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `POST /api/blogs` creates a blog
 - `DELETE /api/blogs/:id` deletes a blog by id
 
-Run `node cli.js` to print the blogs in the console.
+Run `node src/cli.js` to print the blogs in the console.
+
+## Project structure
+
+- `src/index.js` starts the server
+- `src/app.js` configures the Express application
+- `src/controllers/blogs.js` defines the blog API routes
+- `src/models/blog.js` defines the blog model
+- `src/util/db.js` configures the database connection
+- `src/util/middleware.js` handles request errors
