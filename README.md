@@ -24,7 +24,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `GET /api/blogs` lists blogs
 - `POST /api/blogs` creates a blog for the authenticated user (`Authorization: Bearer <token>`)
 - `PUT /api/blogs/:id` updates a blog's likes (JSON body: `{"likes": 3}`)
-- `DELETE /api/blogs/:id` deletes an authenticated user's own blog
+- `DELETE /api/blogs/:id` (Exercise 11) deletes a blog only when the authenticated user created it
 - `POST /api/login` logs in with `{ "username": "email", "password": "..." }` and returns a token
 - `GET /api/users` lists users
 - `POST /api/users` creates a user (JSON body includes `name`, a unique email `username`, and `password`; passwords are stored as hashes)
