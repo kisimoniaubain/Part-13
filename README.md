@@ -19,10 +19,18 @@ Install dependencies with `npm install`. Copy `.env.example` to `.env`, set
 npm start
 ```
 
+The checkup tests use a separate PostgreSQL database so your application data
+is not reset. Create it once with
+`docker exec blog-db psql -U postgres -d postgres -c "CREATE DATABASE test_db;"`,
+set `TEST_DATABASE_URL` in `.env`, then run `npm run start:test` in one
+terminal and `npm test` in another.
+
 The API is available at `http://localhost:3001/api/blogs`:
 
 - `GET /api/blogs` lists blogs by descending likes with their creating user; `?search=word` filters titles and authors case-insensitively
 - `GET /api/authors` returns each author’s blog count and total likes, ordered by likes descending
+- `GET /` returns HTTP 200
+- `POST /api/reset` clears the test database and is disabled outside testing mode
 - `POST /api/blogs` creates a blog for the authenticated user (`Authorization: Bearer <token>`)
 - `PUT /api/blogs/:id` updates a blog's likes (JSON body: `{"likes": 3}`)
 - `DELETE /api/blogs/:id` (Exercise 11) deletes a blog only when the authenticated user created it

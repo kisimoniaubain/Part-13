@@ -5,7 +5,9 @@
   "description": "Full Stack Open relational databases exercises",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "start:test": "cross-env TESTING=true node src/index.js",
+    "test": "cross-env TESTING=true node --test --test-concurrency=1 tests/api_ch3.test.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -14,5 +16,8 @@
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.1",
     "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
