@@ -21,7 +21,7 @@ npm start
 
 The API is available at `http://localhost:3001/api/blogs`:
 
-- `GET /api/blogs` lists blogs with their creating user; `?search=word` filters titles case-insensitively
+- `GET /api/blogs` lists blogs with their creating user; `?search=word` filters titles and authors case-insensitively
 - `POST /api/blogs` creates a blog for the authenticated user (`Authorization: Bearer <token>`)
 - `PUT /api/blogs/:id` updates a blog's likes (JSON body: `{"likes": 3}`)
 - `DELETE /api/blogs/:id` (Exercise 11) deletes a blog only when the authenticated user created it

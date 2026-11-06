@@ -10,7 +10,12 @@ const router = express.Router();
 router.get('/', async (request, response, next) => {
   try {
     const where = request.query.search
-      ? { title: { [Op.iLike]: `%${request.query.search}%` } }
+      ? {
+          [Op.or]: [
+            { title: { [Op.iLike]: `%${request.query.search}%` } },
+            { author: { [Op.iLike]: `%${request.query.search}%` } },
+          ],
+        }
       : undefined;
     const blogs = await Blog.findAll({
       where,
