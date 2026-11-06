@@ -30,6 +30,7 @@ The database schema is created and updated by migrations in `src/migrations/`.
 The API is available at `http://localhost:3001/api/blogs`:
 
 - `GET /api/blogs` lists blogs by descending likes with their creating user; `?search=word` filters titles and authors case-insensitively
+- Blog `year` is optional and, when provided, must be an integer from 1991 through the current year
 - `GET /api/authors` returns each author’s blog count and total likes, ordered by likes descending
 - `GET /` returns HTTP 200
 - `POST /api/reset` clears the test database and is disabled outside testing mode

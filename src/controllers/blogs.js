@@ -34,12 +34,13 @@ router.post('/', authenticateToken, async (request, response, next) => {
   }
 
   try {
-    const { author, url, title, likes } = request.body;
+    const { author, url, title, likes, year } = request.body;
     const blog = await Blog.create({
       author,
       url,
       title,
       likes,
+      year,
       userId: request.userId,
     });
     response.status(201).json(blog);

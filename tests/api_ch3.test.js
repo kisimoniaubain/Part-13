@@ -79,6 +79,37 @@ describe('Blogs API', () => {
     assert.equal(response.status, 200);
     assert.equal(body.likes, 5);
   });
+
+  it('accepts a valid year and rejects years outside the allowed range or non-integers', async () => {
+    const valid = await request('/blogs', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${tokens[0]}` },
+      body: JSON.stringify({
+        title: 'Year Validation Blog',
+        author: 'Year Validation Author',
+        url: 'https://example.com/year-validation',
+        year: 1991,
+      }),
+    });
+    assert.equal(valid.response.status, 201);
+    assert.equal(valid.body.year, 1991);
+
+    for (const year of [1990, new Date().getFullYear() + 1, 2020.5]) {
+      const { response, body } = await request('/blogs', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${tokens[0]}` },
+        body: JSON.stringify({
+          title: `Invalid Year ${year}`,
+          author: 'Checkup Author',
+          url: `https://example.com/invalid-year-${year}`,
+          year,
+        }),
+      });
+      assert.equal(response.status, 400);
+      assert.ok(Array.isArray(body.error));
+      assert.ok(body.error.length > 0);
+    }
+  });
 });
 
 describe('Users and authors API', () => {
