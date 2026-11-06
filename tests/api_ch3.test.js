@@ -1,6 +1,10 @@
+require('dotenv').config();
+
 const { before, describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const { baseUrl, request, resetDatabase, createUser, login } = require('./helper');
+const Session = require('../src/models/session');
+const User = require('../src/models/user');
 
 let users;
 let tokens;
@@ -221,5 +225,51 @@ describe('Users and authors API', () => {
     const allReadings = await request(`/users/${users[1].id}`);
     assert.equal(allReadings.response.status, 200);
     assert.deepEqual(allReadings.body.readings.map((entry) => entry.id), [blog.id]);
+  });
+
+  it('blocks disabled users from logging in or using an existing session', async () => {
+    await User.update({ disabled: true }, { where: { id: users[0].id } });
+    try {
+      const loginResult = await request('/login', {
+        method: 'POST',
+        body: JSON.stringify({ username: 'test1@example.com', password: 'password123' }),
+      });
+      assert.equal(loginResult.response.status, 401);
+
+      const blogResult = await request('/blogs', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${tokens[0]}` },
+        body: JSON.stringify({
+          title: 'Disabled User Blog',
+          author: 'Disabled User',
+          url: 'https://example.com/disabled-user',
+        }),
+      });
+      assert.equal(blogResult.response.status, 403);
+    } finally {
+      await User.update({ disabled: false }, { where: { id: users[0].id } });
+    }
+  });
+
+  it('logs out and invalidates the active token', async () => {
+    assert.equal(await Session.count({ where: { userId: users[0].id } }), 1);
+
+    const logout = await request('/logout', {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${tokens[0]}` },
+    });
+    assert.equal(logout.response.status, 204);
+    assert.equal(await Session.count({ where: { userId: users[0].id } }), 0);
+
+    const protectedRequest = await request('/blogs', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${tokens[0]}` },
+      body: JSON.stringify({
+        title: 'Logged Out Blog',
+        author: 'Logged Out User',
+        url: 'https://example.com/logged-out',
+      }),
+    });
+    assert.equal(protectedRequest.response.status, 401);
   });
 });

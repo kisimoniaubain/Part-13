@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const Session = require('../models/session');
 const User = require('../models/user');
 const HttpError = require('../util/httpError');
 const { createToken } = require('../util/auth');
@@ -15,13 +16,19 @@ router.post('/', async (request, response, next) => {
   try {
     const user = await User.findOne({
       where: { username },
-      attributes: ['id', 'username', 'passwordHash'],
+      attributes: ['id', 'username', 'passwordHash', 'disabled'],
     });
-    if (!user || !user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
+    if (
+      !user
+      || user.disabled
+      || !user.passwordHash
+      || !(await bcrypt.compare(password, user.passwordHash))
+    ) {
       return next(new HttpError(401, 'Invalid username or password'));
     }
 
-    response.json({ token: createToken(user), username: user.username });
+    const session = await Session.create({ userId: user.id });
+    response.json({ token: createToken(user, session), username: user.username });
   } catch (error) {
     next(error);
   }

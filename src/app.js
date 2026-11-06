@@ -5,6 +5,7 @@ require('./models/associations');
 const authorsRouter = require('./controllers/authors');
 const blogsRouter = require('./controllers/blogs');
 const loginRouter = require('./controllers/login');
+const logoutRouter = require('./controllers/logout');
 const readingListsRouter = require('./controllers/readingLists');
 const resetRouter = require('./controllers/reset');
 const usersRouter = require('./controllers/users');
@@ -20,6 +21,7 @@ app.use('/api/readinglists', readingListsRouter);
 app.use('/api/authors', authorsRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/logout', logoutRouter);
 app.use('/api/users', usersRouter);
 app.use(errorHandler);
 

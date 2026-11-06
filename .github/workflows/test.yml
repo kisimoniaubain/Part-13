@@ -9,6 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db?sslmode=disable
+      JWT_SECRET: test_secret_for_ci
+      PORT: 3001
     services:
       postgres:
         image: postgres:17
@@ -38,10 +42,6 @@ jobs:
 
       - name: Start application
         run: npm run start:test > app.log 2>&1 &
-        env:
-          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db?sslmode=disable
-          JWT_SECRET: test_secret_for_ci
-          PORT: 3001
 
       - name: Wait for application
         run: npx --yes wait-on http://localhost:3001 -t 30000
