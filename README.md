@@ -34,6 +34,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `GET /api/blogs` lists blogs by descending likes with their creating user; `?search=word` filters titles and authors case-insensitively
 - Blog `year` is optional and, when provided, must be an integer from 1991 through the current year
 - `GET /api/authors` returns each author’s blog count and total likes, ordered by likes descending
+- `POST /api/readinglists` adds a blog to a user's reading list (JSON body: `{"blogId": 5, "userId": 3}`)
 - `GET /` returns HTTP 200
 - `POST /api/reset` clears the test database and is disabled outside testing mode
 - `POST /api/blogs` creates a blog for the authenticated user (`Authorization: Bearer <token>`)
@@ -43,7 +44,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `GET /api/users` lists users with the blogs they created
 - `POST /api/users` creates a user (JSON body includes `name`, a unique email `username`, and `password`; passwords are stored as hashes)
 - `PUT /api/users/:username` updates a user's name
-- `GET /api/users/:id` gets a user by ID
+- `GET /api/users/:id` gets a user and their reading-list blogs
 
 Run `node src/cli.js` to print the blogs in the console.
 

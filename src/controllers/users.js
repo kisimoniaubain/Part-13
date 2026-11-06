@@ -69,7 +69,14 @@ router.get('/:id', async (request, response, next) => {
   }
 
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      include: [{
+        model: Blog,
+        as: 'readings',
+        attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
+        through: { attributes: [] },
+      }],
+    });
     if (!user) {
       return next(new HttpError(404, 'User not found'));
     }

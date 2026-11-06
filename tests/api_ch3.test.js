@@ -128,4 +128,46 @@ describe('Users and authors API', () => {
     assert.ok(body.some((author) => author.author === 'Checkup Author'
       && Number(author.blogs) === 1 && Number(author.likes) === 5));
   });
+
+  it('adds blogs to a user reading list and includes readings in the individual user route', async () => {
+    const blogs = await fetch(`${baseUrl}/blogs`).then((response) => response.json());
+    const blog = blogs.find((entry) => entry.title === 'Checkup Blog Post');
+
+    const added = await request('/readinglists', {
+      method: 'POST',
+      body: JSON.stringify({ blogId: blog.id, userId: users[0].id }),
+    });
+    assert.equal(added.response.status, 201);
+    assert.equal(added.body.read, false);
+
+    const user = await request(`/users/${users[0].id}`);
+    assert.equal(user.response.status, 200);
+    assert.deepEqual(user.body.readings, [{
+      id: blog.id,
+      url: blog.url,
+      title: blog.title,
+      author: blog.author,
+      likes: blog.likes,
+      year: blog.year,
+    }]);
+  });
+
+  it('reports invalid reading-list user and blog ids', async () => {
+    const blogs = await fetch(`${baseUrl}/blogs`).then((response) => response.json());
+    const blogId = blogs[0].id;
+
+    const invalidUser = await request('/readinglists', {
+      method: 'POST',
+      body: JSON.stringify({ blogId, userId: 999999 }),
+    });
+    assert.equal(invalidUser.response.status, 404);
+    assert.equal(invalidUser.body.error, 'User not found');
+
+    const invalidBlog = await request('/readinglists', {
+      method: 'POST',
+      body: JSON.stringify({ blogId: 999999, userId: users[0].id }),
+    });
+    assert.equal(invalidBlog.response.status, 404);
+    assert.equal(invalidBlog.body.error, 'Blog not found');
+  });
 });
