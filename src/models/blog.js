@@ -20,16 +20,11 @@ const Blog = sequelize.define(
     userId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'users',
-        key: 'id',
-      },
-      onDelete: 'SET NULL',
     },
   },
   {
     tableName: 'blogs',
-    timestamps: false,
+    underscored: true,
   },
 );
 

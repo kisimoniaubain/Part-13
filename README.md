@@ -25,6 +25,8 @@ is not reset. Create it once with
 set `TEST_DATABASE_URL` in `.env`, then run `npm run start:test` in one
 terminal and `npm test` in another.
 
+The database schema is created and updated by migrations in `src/migrations/`.
+
 The API is available at `http://localhost:3001/api/blogs`:
 
 - `GET /api/blogs` lists blogs by descending likes with their creating user; `?search=word` filters titles and authors case-insensitively

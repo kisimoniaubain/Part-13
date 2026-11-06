@@ -51,6 +51,7 @@ User = sequelize.define(
   },
   {
     tableName: 'users',
+    underscored: true,
     defaultScope: {
       attributes: { exclude: ['passwordHash'] },
     },

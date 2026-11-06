@@ -63,6 +63,8 @@ describe('Blogs API', () => {
     assert.equal(body.title, 'Checkup Blog Post');
     assert.equal(body.likes, 0);
     assert.equal(body.userId, users[0].id);
+    assert.ok(body.createdAt);
+    assert.ok(body.updatedAt);
   });
 
   it('lists the created blog and supports updating likes', async () => {
@@ -85,6 +87,7 @@ describe('Users and authors API', () => {
     assert.equal(response.status, 200);
     assert.equal(body.length, 2);
     assert.ok(body.every((user) => user.id && user.username && user.name && Array.isArray(user.blogs)));
+    assert.ok(body.every((user) => user.createdAt && user.updatedAt));
   });
 
   it('returns author statistics', async () => {
