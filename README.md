@@ -35,6 +35,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 - Blog `year` is optional and, when provided, must be an integer from 1991 through the current year
 - `GET /api/authors` returns each author’s blog count and total likes, ordered by likes descending
 - `POST /api/readinglists` adds a blog to a user's reading list (JSON body: `{"blogId": 5, "userId": 3}`)
+- `PUT /api/readinglists/:id` marks an entry in the authenticated user's reading list as read (JSON body: `{"read": true}`)
 - `GET /` returns HTTP 200
 - `POST /api/reset` clears the test database and is disabled outside testing mode
 - `POST /api/blogs` creates a blog for the authenticated user (`Authorization: Bearer <token>`)

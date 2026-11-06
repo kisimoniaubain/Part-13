@@ -176,4 +176,38 @@ describe('Users and authors API', () => {
     assert.equal(invalidBlog.response.status, 404);
     assert.equal(invalidBlog.body.error, 'Blog not found');
   });
+
+  it('lets only the reading-list owner mark a blog as read', async () => {
+    const blogs = await fetch(`${baseUrl}/blogs`).then((response) => response.json());
+    const blog = blogs.find((entry) => entry.title === 'Checkup Blog Post');
+    const added = await request('/readinglists', {
+      method: 'POST',
+      body: JSON.stringify({ blogId: blog.id, userId: users[1].id }),
+    });
+    assert.equal(added.response.status, 201);
+
+    const userBeforeUpdate = await request(`/users/${users[1].id}`);
+    const readingListId = userBeforeUpdate.body.readings
+      .find((entry) => entry.id === blog.id).readingList.id;
+
+    const forbidden = await request(`/readinglists/${readingListId}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${tokens[0]}` },
+      body: JSON.stringify({ read: true }),
+    });
+    assert.equal(forbidden.response.status, 403);
+
+    const marked = await request(`/readinglists/${readingListId}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${tokens[1]}` },
+      body: JSON.stringify({ read: true }),
+    });
+    assert.equal(marked.response.status, 200);
+    assert.equal(marked.body.read, true);
+
+    const user = await request(`/users/${users[1].id}`);
+    const reading = user.body.readings.find((entry) => entry.id === blog.id);
+    assert.equal(reading.readingList.read, true);
+    assert.equal(reading.readingList.id, readingListId);
+  });
 });
