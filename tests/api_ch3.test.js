@@ -209,5 +209,17 @@ describe('Users and authors API', () => {
     const reading = user.body.readings.find((entry) => entry.id === blog.id);
     assert.equal(reading.readingList.read, true);
     assert.equal(reading.readingList.id, readingListId);
+
+    const readFilter = await request(`/users/${users[1].id}?read=true`);
+    assert.equal(readFilter.response.status, 200);
+    assert.deepEqual(readFilter.body.readings.map((entry) => entry.id), [blog.id]);
+
+    const unreadFilter = await request(`/users/${users[1].id}?read=false`);
+    assert.equal(unreadFilter.response.status, 200);
+    assert.deepEqual(unreadFilter.body.readings, []);
+
+    const allReadings = await request(`/users/${users[1].id}`);
+    assert.equal(allReadings.response.status, 200);
+    assert.deepEqual(allReadings.body.readings.map((entry) => entry.id), [blog.id]);
   });
 });

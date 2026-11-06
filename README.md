@@ -45,7 +45,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `GET /api/users` lists users with the blogs they created
 - `POST /api/users` creates a user (JSON body includes `name`, a unique email `username`, and `password`; passwords are stored as hashes)
 - `PUT /api/users/:username` updates a user's name
-- `GET /api/users/:id` gets a user and their reading-list blogs
+- `GET /api/users/:id` gets a user and their reading-list blogs; `?read=true` or `?read=false` filters by read status
 
 Run `node src/cli.js` to print the blogs in the console.
 

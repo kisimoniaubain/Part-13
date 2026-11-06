@@ -69,12 +69,22 @@ router.get('/:id', async (request, response, next) => {
   }
 
   try {
+    const readingListWhere = {};
+    if (request.query.read === 'true') {
+      readingListWhere.read = true;
+    } else if (request.query.read === 'false') {
+      readingListWhere.read = false;
+    }
+
     const user = await User.findByPk(id, {
       include: [{
         model: Blog,
         as: 'readings',
         attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
-        through: { attributes: ['id', 'read'] },
+        through: {
+          attributes: ['id', 'read'],
+          where: readingListWhere,
+        },
       }],
     });
     if (!user) {
