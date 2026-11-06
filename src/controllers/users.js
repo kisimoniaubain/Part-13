@@ -1,13 +1,16 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const Blog = require('../models/blog');
 const HttpError = require('../util/httpError');
 
 const router = express.Router();
 
 router.get('/', async (_request, response, next) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [{ model: Blog, as: 'blogs' }],
+    });
     response.json(users);
   } catch (error) {
     next(error);

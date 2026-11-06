@@ -1,5 +1,6 @@
 const express = require('express');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const HttpError = require('../util/httpError');
 const { authenticateToken } = require('../util/auth');
 
@@ -7,7 +8,9 @@ const router = express.Router();
 
 router.get('/', async (_request, response, next) => {
   try {
-    const blogs = await Blog.findAll();
+    const blogs = await Blog.findAll({
+      include: [{ model: User, as: 'user' }],
+    });
     response.json(blogs);
   } catch (error) {
     next(error);
