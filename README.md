@@ -25,6 +25,10 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `POST /api/blogs` creates a blog
 - `PUT /api/blogs/:id` updates a blog's likes (JSON body: `{"likes": 3}`)
 - `DELETE /api/blogs/:id` deletes a blog by id
+- `GET /api/users` lists users
+- `POST /api/users` creates a user (JSON body includes `name` and `username`; `password` is accepted but ignored)
+- `PUT /api/users/:username` updates a user's name
+- `GET /api/users/:id` gets a user by ID
 
 Run `node src/cli.js` to print the blogs in the console.
 
@@ -33,6 +37,8 @@ Run `node src/cli.js` to print the blogs in the console.
 - `src/index.js` starts the server
 - `src/app.js` configures the Express application
 - `src/controllers/blogs.js` defines the blog API routes
+- `src/controllers/users.js` defines the user API routes
 - `src/models/blog.js` defines the blog model
+- `src/models/user.js` defines the user model and timestamps
 - `src/util/db.js` configures the database connection
 - `src/util/middleware.js` centralizes request error handling
