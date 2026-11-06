@@ -35,4 +35,4 @@ Run `node src/cli.js` to print the blogs in the console.
 - `src/controllers/blogs.js` defines the blog API routes
 - `src/models/blog.js` defines the blog model
 - `src/util/db.js` configures the database connection
-- `src/util/middleware.js` handles request errors
+- `src/util/middleware.js` centralizes request error handling

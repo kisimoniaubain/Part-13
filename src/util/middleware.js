@@ -1,11 +1,17 @@
 const { ValidationError } = require('sequelize');
 
 function errorHandler(error, _request, response, _next) {
-  console.error(error);
-  if (error instanceof ValidationError || error.status === 400 || error.status === 413) {
-    return response.status(error.status || 400).json({ error: error.message });
+  const statusCode = error instanceof ValidationError
+    ? 400
+    : error.statusCode || error.status || 500;
+
+  if (statusCode >= 500) {
+    console.error(error);
   }
-  response.status(500).json({ error: 'Internal server error' });
+
+  response.status(statusCode).json({
+    error: statusCode >= 500 ? 'Internal server error' : error.message,
+  });
 }
 
 module.exports = errorHandler;
