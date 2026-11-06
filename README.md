@@ -26,7 +26,7 @@ The API is available at `http://localhost:3001/api/blogs`:
 - `PUT /api/blogs/:id` updates a blog's likes (JSON body: `{"likes": 3}`)
 - `DELETE /api/blogs/:id` deletes a blog by id
 - `GET /api/users` lists users
-- `POST /api/users` creates a user (JSON body includes `name` and `username`; `password` is accepted but ignored)
+- `POST /api/users` creates a user (JSON body includes `name` and a unique email `username`; `password` is accepted but ignored)
 - `PUT /api/users/:username` updates a user's name
 - `GET /api/users/:id` gets a user by ID
 
