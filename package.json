@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/index.js",
     "start:test": "cross-env TESTING=true node src/index.js",
-    "test": "cross-env TESTING=true node --test --test-concurrency=1 tests/api_ch3.test.js"
+    "test": "cross-env TESTING=true node --test --test-concurrency=1"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

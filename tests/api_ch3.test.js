@@ -3,6 +3,8 @@ require('dotenv').config();
 const { before, describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const { baseUrl, request, resetDatabase, createUser, login } = require('./helper');
+const Blog = require('../src/models/blog');
+const ReadingList = require('../src/models/readingList');
 const Session = require('../src/models/session');
 const User = require('../src/models/user');
 
@@ -28,10 +30,20 @@ describe('Checkup endpoints', () => {
   });
 
   it('reset clears the test database', async () => {
+    const blog = await Blog.create({
+      title: 'Reset Check Blog',
+      author: 'Reset Check',
+      url: 'https://example.com/reset-check',
+      userId: users[0].id,
+    });
+    await ReadingList.create({ userId: users[0].id, blogId: blog.id });
+
     await resetDatabase();
     const { response, body } = await request('/blogs');
     assert.equal(response.status, 200);
     assert.deepEqual(body, []);
+    assert.equal(await ReadingList.count(), 0);
+    assert.equal(await Session.count(), 0);
 
     users = await Promise.all([
       createUser('test1@example.com', 'Test User 1', 'password123'),

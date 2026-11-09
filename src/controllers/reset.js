@@ -10,7 +10,9 @@ router.post('/', async (_request, response, next) => {
   }
 
   try {
-    await sequelize.query('TRUNCATE TABLE "blogs", "users" RESTART IDENTITY CASCADE');
+    await sequelize.query(
+      'TRUNCATE TABLE "reading_lists", "sessions", "blogs", "users" RESTART IDENTITY CASCADE',
+    );
     response.status(204).end();
   } catch (error) {
     next(error);
